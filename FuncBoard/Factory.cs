@@ -15,6 +15,11 @@ namespace FuncBoard
 
 		public static Func<int, int, int> Subtract => (x, y) => x - y;
 
+		public static fInt Combine(fInt x, fInt y, Func<int, int, int> combine)
+		{
+			return () => combine(x(), y());
+		}
+
 		public static fInt Combine(Cell<fInt> x, Cell<fInt> y, Func<int, int, int> combine)
 		{
 			return () => combine(x.Value()(), y.Value()());

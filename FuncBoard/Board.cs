@@ -25,4 +25,44 @@ namespace FuncBoard
 			return Columns.Skip(index).First().GetCell(row);
 		}
 	}
+
+	class Column<T>
+	{
+		public string Name { get; protected set; }
+
+		public IEnumerable<Cell<T>> Cells { get; protected set; }
+
+		public static Column<T> Create(string name, T defaultValue, int cellCount = 10)
+		{
+			return new Column<T>()
+			{
+				Name = name,
+				Cells = Enumerable.Range(0, cellCount).Select(_ => new Cell<T>(defaultValue)).ToArray()
+			};
+		}
+
+		public Cell<T> GetCell(int index)
+		{
+			return Cells.Skip(index).First();
+		}
+	}
+
+	class Cell<T>
+	{
+		private T value;
+		public Cell(T value)
+		{
+			this.value = value;
+		}
+
+		public void SetValue(T value)
+		{
+			this.value = value;
+		}
+
+		public T Value()
+		{
+			return this.value;
+		}
+	}
 }
