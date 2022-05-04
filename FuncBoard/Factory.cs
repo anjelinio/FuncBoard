@@ -11,6 +11,8 @@ namespace FuncBoard
 	{
 		public static fInt Unity = () => 0;
 
+		public static fInt Literal(int x) => () => x;
+
 		public static Func<int, int, int> Add => (x, y) => x + y;
 
 		public static Func<int, int, int> Subtract => (x, y) => x - y;

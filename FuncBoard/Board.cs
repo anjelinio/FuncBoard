@@ -9,7 +9,7 @@ namespace FuncBoard
 	{
 		public int NoOfRows { get; private set; }
 
-		public IEnumerable<Column<T>> Columns { get; protected set; }
+		public Column<T>[] Columns { get; protected set; }
 
 		public static Board<T> Create(int noOfRows, T defaultValue, params string[] columnHeaders)
 		{
@@ -30,7 +30,7 @@ namespace FuncBoard
 	{
 		public string Name { get; protected set; }
 
-		public IEnumerable<Cell<T>> Cells { get; protected set; }
+		public Cell<T>[] Cells { get; protected set; }
 
 		public static Column<T> Create(string name, T defaultValue, int cellCount = 10)
 		{
