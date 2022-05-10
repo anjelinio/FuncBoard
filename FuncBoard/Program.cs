@@ -11,7 +11,7 @@ namespace FuncBoard
 			var board = Board<fInt>.Create(10, Factory.Unity, "Earnings", "Expenses", "Net");
 			var display = Display<int>.Create(board);
 
-			Init(board);
+			//Init(board);
 
 			display.Draw();
 
@@ -63,6 +63,7 @@ namespace FuncBoard
 		{
 			Console.WriteLine();
 			Console.WriteLine("SetValue: sv <column> <row> <value>");
+			Console.WriteLine("SetFormula: sf <column> <row> <Add|Subtract> <col1>,<row1> <col2>,<row2> <colN>,<rowN>");
 			Console.WriteLine("Exit: bye");
 
 			var userInput = Console.ReadLine();
@@ -72,8 +73,14 @@ namespace FuncBoard
 				SetValue(board, userInput);
 				return true;
 			}
-			else	
-				return userInput.IndexOf("bye") < 0 || string.Empty.Equals(userInput.Trim());
+			else
+				if (userInput.StartsWith("sf"))
+				{
+					SetFormula(board, userInput);
+					return true;
+				}
+				else
+					return userInput.IndexOf("bye") < 0 || string.Empty.Equals(userInput.Trim());
 		}
 
 		public static void SetValue(Board<fInt> board, string userInput)
@@ -85,6 +92,41 @@ namespace FuncBoard
 			var val = int.Parse(parts[2]);
 
 			board.GetCell(col, row).SetValue(() => val);
+		}
+
+		public static void SetFormula(Board<fInt> board, string userInput)
+		{
+			var parts = userInput.Split(' ', StringSplitOptions.RemoveEmptyEntries).Skip(1).ToArray();
+
+			var col = int.Parse(parts[0]);
+			var row = int.Parse(parts[1]);
+
+			var formulaName = parts[2];
+
+			System.Func<int, int, int> formula = null;
+
+			switch (formulaName)
+			{
+				case "Add":
+					formula = Factory.Add;
+					break;
+
+				case "Subtract":
+					formula = Factory.Subtract;
+					break;
+			}
+
+			var cells = parts.Skip(3).Select(part => 
+			{
+				var xy = part.Split(',');
+				var cell = board.GetCell(int.Parse(xy[0]), int.Parse(xy[1]));
+
+				return cell;
+			});
+
+			var valueFunc = Factory.Combine(cells, formula);
+
+			board.GetCell(col, row).SetValue(valueFunc);
 		}
 	}
 }
